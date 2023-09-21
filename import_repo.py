@@ -1,9 +1,9 @@
 import requests
 import time
 
-SNYK_TOKEN = "" #your snyk API token (account settings on snyk UI)
-ORG_ID = "" #Org ID (this will need to be done/run for each org)
-integrationId = "" #SCM integrationID (get from integration page)
+SNYK_TOKEN = "bfb65030-ed70-4515-a7a4-7b83deb286ac" #your snyk API token (account settings on snyk UI)
+ORG_ID = "0ebb9084-0c7b-4362-9a45-880e038d6284" #Org ID (this will need to be done/run for each org)
+integrationId = "eaaa6bcc-6dcb-4154-af50-bd8a8b4615a0" #SCM integrationID (get from integration page)
 branch = "master" #set the default branch to monitor (main/master, which is what Snyk monitors by default)
 
 #takes displayName attribute from target_url endpoint and feeds it into the import_url api
@@ -15,7 +15,7 @@ all_targets = []
 
 headers = {
     'Accept': 'application/vnd.api+json',
-    'Authorization': f'{SNYK_TOKEN}'
+    'Authorization': f'token {SNYK_TOKEN}'
     }
 res = requests.request("GET", target_url, headers=headers).json()
 all_targets.extend(res['data'])
@@ -24,10 +24,11 @@ all_targets.extend(res['data'])
 for project in all_targets:
     # for each all_targets, get the displayName (format is usually repo/name) and split it to pass into the import API
     display_name=(project['attributes']['displayName'])
+    print(display_name)
     splitName = display_name.split('/')
     if len(splitName) >= 2:
-        owner = splitName[1] 
-        name = splitName[0]
+        owner = splitName[0] 
+        name = splitName[1]
     else:
         print("invalid / format for the repo ")
 
@@ -40,7 +41,7 @@ for project in all_targets:
     }
     headers = { 
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': f'{SNYK_TOKEN}'
+        'Authorization': f'token {SNYK_TOKEN}'
     }
 
     response = requests.post(import_url, headers=headers, json=request_data)
