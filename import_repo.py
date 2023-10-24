@@ -3,12 +3,12 @@ import time
 
 SNYK_TOKEN = "" #your snyk API token (account settings on snyk UI)
 ORG_ID = "" #Org ID (this will need to be done/run for each org)
-integrationId = "" #SCM integrationID (get from integration page)
-branch = "master" #set the default branch to monitor (main/master, which is what Snyk monitors by default)
+integrationId = "" #SCM integrationID (get from integration page) for integratino you want to import 
+branch = "master" #set the default branch to monitor (main/master, which is what Snyk monitors by default) 
 
 #takes displayName attribute from target_url endpoint and feeds it into the import_url api
 #considerations: branch 
-target_url = f"https://api.snyk.io/rest/orgs/{ORG_ID}/targets?version=2023-09-14%7Ebeta&origin=azure-repos"
+target_url = f"https://api.snyk.io/rest/orgs/{ORG_ID}/targets?version=2023-10-13%7Ebeta&origin=github"
 import_url = f"https://api.snyk.io/v1/org/{ORG_ID}/integrations/{integrationId}/import"
 
 all_targets = []
@@ -44,7 +44,6 @@ for project in all_targets:
     }
 
     response = requests.post(import_url, headers=headers, json=request_data)
-    time.sleep(3)
 
     if response.status_code == 200 or 201:
         print("Request was successful. Importing " + owner + "/" + name + " on " + branch + " branch")
